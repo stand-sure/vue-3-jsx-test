@@ -1,4 +1,5 @@
 import { h as createElement } from "vue";
+import { shallowMount } from "@vue/test-utils";
 
 import { App } from "../App";
 
@@ -12,6 +13,19 @@ describe("App", () => {
     const node = createElement(App());
     const actual = (node.children as any[]).find(c => c.type === "img").props
       .src;
+    expect(actual).toBe(logo);
+  });
+
+  it("should use logo v2", () => {
+    const wrapper = shallowMount(App(), {
+        global: {
+            stubs: {
+                HelloWorld: true
+            }
+        }
+    });
+
+    const actual = (wrapper.vm as any).querySelector("img").getAttribute("src");
     expect(actual).toBe(logo);
   });
 });
