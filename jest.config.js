@@ -1,6 +1,6 @@
 module.exports = {
   preset: "ts-jest/presets/js-with-babel",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transform: {
     "^.+\\.tsx?$": "ts-jest"
   },
@@ -9,7 +9,7 @@ module.exports = {
     "ts-jest": {
       tsConfig: "./tsconfig.json",
       babelConfig: {
-        presets: ["@babel/env", "@vue/babel-preset-jsx"]
+        presets: ["@babel/env"]
       }
     }
   },
