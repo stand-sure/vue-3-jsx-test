@@ -1,31 +1,16 @@
-import { h as createElement } from "vue";
-import { shallowMount } from "@vue/test-utils";
-
+import { VNode, RendererNode, RendererElement } from "vue";
 import { App } from "../App";
 
-jest.mock("../components/HelloWorld");
+type Node = JSX.Element & VNode<RendererNode, RendererElement>;
 
 //@ts-ignore
 import logo from "../assets/logo.png";
 
 describe("App", () => {
   it("should use logo", () => {
-    const node = createElement(App());
-    const actual = (node.children as any[]).find(c => c.type === "img").props
+    const node = App() as Node;
+    const actual = (node.children as Node[]).find(c => c.type === "img").props
       .src;
-    expect(actual).toBe(logo);
-  });
-
-  it("should use logo v2", () => {
-    const wrapper = shallowMount(App(), {
-        global: {
-            stubs: {
-                HelloWorld: true
-            }
-        }
-    });
-
-    const actual = (wrapper.vm as any).querySelector("img").getAttribute("src");
     expect(actual).toBe(logo);
   });
 });
