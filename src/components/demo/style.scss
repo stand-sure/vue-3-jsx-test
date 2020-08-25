@@ -34,8 +34,18 @@
       list-style: none;
 
       &-item {
-        text-decoration: underline;
         cursor: pointer;
+        @apply text-sm;
+        @apply text-left;
+        @apply pl-10;
+
+        &:hover {
+          @apply bg-teal-600;
+        }
+        &:focus {
+          @apply outline-none;
+          @apply shadow-outline;
+        }
       }
     }
   }
