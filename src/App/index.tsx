@@ -7,8 +7,8 @@ import { Demo } from "../components/demo";
  */
 const App = () => {
   return (
-    <div id="app">
-      <img alt="Vue logo" src={logo} />
+    <div class="container mx-auto">
+      <img alt="Vue logo" src={logo} class="mx-auto" />
       <Demo />
     </div>
   );

@@ -1,0 +1,62 @@
+/* SUIT naming https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md */
+
+@use "../../assets/tailwind.css";
+
+%header-footer {
+  @apply py-8;
+  @apply col-start-1;
+  @apply col-end-5;
+  @apply text-white;
+  @apply text-2xl;
+}
+
+%demo-body {
+  @apply py-4;
+  @apply text-lg;
+}
+
+.demo {
+  @apply grid;
+  @apply mx-auto;
+
+  &-header {
+    @extend %header-footer;
+    @apply bg-blue-500;
+  }
+
+  &-topics {
+    @extend %demo-body;
+    @apply col-start-1;
+    @apply col-end-2;
+    @apply bg-gray-300;
+
+    &-list {
+      list-style: none;
+
+      &-item {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &-main {
+    @extend %demo-body;
+    @apply col-start-2;
+    @apply col-end-4;
+    @apply bg-orange-500;
+    @apply text-white;
+  }
+
+  &-files {
+    @extend %demo-body;
+    @apply col-start-4;
+    @apply col-end-5;
+    @apply bg-yellow-400;
+  }
+
+  &-footer {
+    @extend %header-footer;
+    @apply bg-indigo-500;
+  }
+}

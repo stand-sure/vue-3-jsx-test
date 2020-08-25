@@ -3,14 +3,18 @@ export type TopicShape = {
   name: string;
 };
 
-const onClick = (ev : MouseEvent) => {
-  ev.preventDefault();
-}
+export type PropsShape = TopicShape & {
+  clickHandler: (topic: TopicShape) => void;
+};
 
 /**
  *
  * @displayName Topic
  */
-const Topic = ({ id, name }: TopicShape) => <li key={id} onClick={onClick}>{name}</li>;
+const Topic = ({ id, name, clickHandler }: PropsShape) => (
+  <li key={id} onClick={() => clickHandler({ id, name })} class="demo-topics-list-item">
+    {name}
+  </li>
+);
 
 export { Topic };

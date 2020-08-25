@@ -4,7 +4,7 @@ import { Demo } from "../../components/demo";
 type Node = JSX.Element & VNode<RendererNode, RendererElement>;
 
 //@ts-ignore
-import demoStyle from "../../components/demo/style.css";
+import demoStyle from "../../components/demo/style.scss";
 
 describe("Demo", () => {
   let node: Node;

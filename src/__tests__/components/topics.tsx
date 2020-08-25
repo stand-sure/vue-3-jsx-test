@@ -1,17 +1,23 @@
 import { VNode, RendererNode, RendererElement } from "vue";
 import { Topics, TopicsShape } from "../../components/topics";
+import { TopicShape } from "../../components/topic";
 
 type Node = JSX.Element & VNode<RendererNode, RendererElement>;
 
 describe(Topics, () => {
   let node: Node;
   let topics: TopicsShape["topics"] = [];
+  const mockTopicChangeHandler = jest.fn((topic: TopicShape) => {});
+
   beforeEach(() => {
     [1, 2, 3].forEach(id => {
       topics?.push({ id, name: `Topic ${id}` });
     });
 
-    node = Topics({ topics }) as Node;
+    node = Topics({
+      topics,
+      topicChangeHandler: mockTopicChangeHandler
+    }) as Node;
   });
 
   it("should have h2", () => {
@@ -33,9 +39,17 @@ describe(Topics, () => {
 
     // collection assertions are a bit weird
     // see https://jestjs.io/docs/en/expect#expectarraycontainingarray
-    expect(children.map(c => c.props)).toEqual(
-      expect.arrayContaining(topics as [])
-    );
+    expect(
+      children.map(c => {
+        const { clickHandler, ...topic }: { [name: string]: any } = {
+          ...c.props
+        };
+
+        expect(clickHandler).toBe(mockTopicChangeHandler);
+
+        return topic;
+      })
+    ).toEqual(expect.arrayContaining(topics as []));
   });
 });
 

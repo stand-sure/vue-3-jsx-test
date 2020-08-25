@@ -1,7 +1,8 @@
 // @ts-ignore
-import style from "./style.css";
+import style from "./style.scss";
 
 import { Topics, TopicsShape } from "../topics";
+import { TopicShape } from "../topic";
 
 const fakeTopics: TopicsShape["topics"] = [
   { id: 1, name: "Topic 1" },
@@ -11,21 +12,22 @@ const fakeTopics: TopicsShape["topics"] = [
 /**
  * @displayName Demo
  */
-const demo = () => {
-  return (
-    <div class="demo-parent">
-      <style>{style}</style>
-      <div class="demo-header">
-        <h1>Vue 3 + JSX + Jest</h1>
-      </div>
-      <div class="demo-left-sidebar">
-        <Topics topics={fakeTopics} />
-      </div>
-      <main class="demo-main">Main content to go here</main>
-      <div class="demo-right-sidebar">See files to go here</div>
-      <footer class="demo-footer">Footer</footer>
+const demo = () => (
+  <div class="demo">
+    <style>{style}</style>
+    <header class="demo-header">Vue 3 + JSX + Jest</header>
+    <div class="demo-topics">
+      <Topics
+        topics={fakeTopics}
+        topicChangeHandler={(topic: TopicShape) => {
+          /* TODO */
+        }}
+      />
     </div>
-  );
-};
+    <main class="demo-main">Main content to go here</main>
+    <div class="demo-files">See files to go here</div>
+    <footer class="demo-footer">Footer</footer>
+  </div>
+);
 
 export { demo as Demo };
