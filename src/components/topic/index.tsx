@@ -3,10 +3,14 @@ export type TopicShape = {
   name: string;
 };
 
+const onClick = (ev : MouseEvent) => {
+  ev.preventDefault();
+}
+
 /**
  *
  * @displayName Topic
  */
-const Topic = ({ id, name }: TopicShape) => <li key={id}>{name}</li>;
+const Topic = ({ id, name }: TopicShape) => <li key={id} onClick={onClick}>{name}</li>;
 
 export { Topic };

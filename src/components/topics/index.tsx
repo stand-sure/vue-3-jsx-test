@@ -12,11 +12,13 @@ const items = (topics: TopicShape[] = []) =>
 /**
  * @displayName Topics
  */
-const Topics = ({ topics }: TopicsShape) => (
-  <>
-    <h2>Topics</h2>
-    <ul>{items(topics)}</ul>
-  </>
-);
+const Topics = ({ topics }: TopicsShape) => {
+  return (
+    <>
+      <h2>Topics</h2>
+      <ul>{ items(topics) }</ul>
+    </>
+  );
+};
 
 export { Topics };

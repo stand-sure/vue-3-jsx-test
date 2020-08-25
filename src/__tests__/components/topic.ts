@@ -29,7 +29,7 @@ describe(Topic, () => {
   });
 
   it("should use name", () => {
-    const actual = node.children[0];
+    const actual = (node.children as Node[])?.[0];
     expect(actual).toBe(topic.name);
   });
 });

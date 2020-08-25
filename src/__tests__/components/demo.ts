@@ -14,12 +14,13 @@ describe("Demo", () => {
 
   it("should use styles", () => {
     const style = (node.children as Node[]).find(c => c.type === "style");
-    const actual = style.children[0];
+    expect(style).not.toBeNull();
+
+    const styleContent = style!.children as Node[];
+    const actual = styleContent![0];
 
     expect(actual).toBe(demoStyle);
   });
 
-  it("should use Topics", () => {
-
-  })
+  it("should use Topics", () => {});
 });

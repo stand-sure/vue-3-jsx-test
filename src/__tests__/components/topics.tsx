@@ -18,7 +18,7 @@ describe(Topics, () => {
     const actual = (node.children as Node[]).find(child => child.type === "h2");
     expect(actual).not.toBeNull();
 
-    const textNode = actual!.children[0];
+    const textNode = (actual?.children as Node[])[0] as Node;
     const text = textNode.children;
     expect(text).toBe("Topics");
   });
@@ -29,11 +29,13 @@ describe(Topics, () => {
     ) as Node;
 
     const children = ((ul.children as any) as Array<Node>).flat();
-    expect(children).toHaveLength(topics.length);
+    expect(children).toHaveLength(topics!.length);
 
     // collection assertions are a bit weird
     // see https://jestjs.io/docs/en/expect#expectarraycontainingarray
-    expect(children.map(c => c.props)).toEqual(expect.arrayContaining(topics));
+    expect(children.map(c => c.props)).toEqual(
+      expect.arrayContaining(topics as [])
+    );
   });
 });
 

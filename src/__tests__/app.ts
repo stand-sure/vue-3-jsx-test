@@ -9,8 +9,8 @@ import logo from "../assets/logo.png";
 describe("App", () => {
   it("should use logo", () => {
     const node = App() as Node;
-    const actual = (node.children as Node[]).find(c => c.type === "img").props
-      .src;
+    const actual = (node?.children as Node[])?.find(c => c.type === "img")
+      ?.props?.src;
     expect(actual).toBe(logo);
   });
 });
