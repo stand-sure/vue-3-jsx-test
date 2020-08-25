@@ -74,7 +74,7 @@ describe("Demo", () => {
 
     topicChangeHandler(expected);
 
-    const actual = selectedTopic.value;
+    const actual = selectedTopic;
 
     expect(actual).toEqual(expected);
   });

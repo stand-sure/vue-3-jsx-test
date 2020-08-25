@@ -2,24 +2,19 @@
 import style from "./style.scss";
 
 import { Topics, TopicsShape } from "../topics";
-import { TopicShape } from "../topic";
-import { Example, PropsShape as ExampleShape } from "../example";
-import { ref } from "vue";
+import { Example } from "../example";
+
+import { useState } from "../../helpers";
 
 const fakeTopics: TopicsShape["topics"] = [
   { id: 1, name: "Topic 1" },
   { id: 2, name: "Topic 2" }
 ];
 
-const selectedTopic = ref<TopicShape>({
+const [selectedTopic, setSelectedTopic] = useState({
   id: -1,
   name: "Please choose..."
 });
-
-const topicChangeHandler = (t: TopicShape) => {
-  selectedTopic.value = { ...t };
-  return selectedTopic.value;
-};
 
 /**
  * @displayName Demo
@@ -29,10 +24,10 @@ const demo = () => (
     <style>{style}</style>
     <header class="demo-header">Vue 3 + JSX + Jest</header>
     <div class="demo-topics">
-      <Topics topics={fakeTopics} topicChangeHandler={topicChangeHandler} />
+      <Topics topics={fakeTopics} topicChangeHandler={setSelectedTopic} />
     </div>
     <main class="demo-main">
-      <Example topic={selectedTopic.value} />
+      <Example topic={selectedTopic} />
     </main>
     <div class="demo-files">See files to go here</div>
     <footer class="demo-footer">Footer</footer>
