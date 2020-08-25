@@ -23,7 +23,7 @@ const useState = function useState<T = any>(initialValue: T) {
   const setter = (newValue: T) => {
     const destination = getter;
     const source = Object(newValue);
-    const keys = Object.keys(source);
+    const keys = [...Object.keys(source), ...Object.keys(destination)];
     keys.forEach(name => {
       destination[name] = source[name];
     });
