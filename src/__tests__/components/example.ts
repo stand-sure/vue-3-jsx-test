@@ -1,10 +1,14 @@
-import { VNode, RendererNode, RendererElement } from "vue";
 import { Example, PropsShape } from "../../components/example";
 
-type Node = JSX.Element & VNode<RendererNode, RendererElement>;
+import {
+  NodeShape,
+  findChildByClass,
+  findChildByPropNames,
+  findChildByType,
+} from "../test-helpers";
 
 describe(Example, () => {
-  let node: Node;
+  let node: NodeShape;
   let props: PropsShape;
 
   beforeEach(() => {
@@ -16,7 +20,7 @@ describe(Example, () => {
       }
     };
 
-    node = Example({ ...props }) as Node;
+    node = Example({ ...props }) as NodeShape;
   });
   
   it("should have tests", () => {});

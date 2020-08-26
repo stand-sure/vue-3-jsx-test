@@ -1,81 +1,81 @@
 /* eslint-disable no-debugger */
-import { VNode, RendererNode, RendererElement } from "vue";
 import { Demo, selectedTopic } from "../../components/demo";
 
-type Node = JSX.Element & VNode<RendererNode, RendererElement>;
+import {
+    NodeShape,
+    findChildByClass,
+    findChildByPropNames,
+    findChildByType,
+} from "../test-helpers";
 
 //@ts-ignore
 import demoStyle from "../../components/demo/style.scss";
 
 describe("Demo", () => {
-  let node: Node;
+    let node: NodeShape;
 
-  const findTopicsNode = () => {
-    const children = node.children as Array<Node>;
-    const parentNode = children.find(
-      el => (el.props as { class?: string })?.class === "demo-topics"
-    );
+    const findTopicsNode = () => {
+        const parentNode = findChildByClass(node, "demo-topics");
+        if (!parentNode) {
+            return;
+        }
 
-    // match on props shape
-    const topicsNode = (parentNode?.children as Node[]).find(
-      n => n.props?.topics && n.props?.topicChangeHandler
-    );
+        return findChildByPropNames(parentNode, [
+            "topics",
+            "topicChangeHandler",
+        ]);
+    };
 
-    return topicsNode;
-  };
+    const findExampleNode = () => {
+        const parentNode = findChildByClass(node, "demo-main");
+        if (!parentNode) {
+            return;
+        }
 
-  const findExampleNode = () => {
-    const children = node.children as Array<Node>;
-    const parentNode = children.find(
-      el => (el.props as { class?: string })?.class === "demo-main"
-    );
-    const exampleNode = (parentNode?.children as Node[]).find(
-      n => n.props?.topic
-    );
-    return exampleNode;
-  };
+        return findChildByPropNames(parentNode, ["topic"]);
+    };
 
-  beforeEach(() => {
-    node = Demo() as Node;
-  });
+    beforeEach(() => {
+        node = Demo() as NodeShape;
+    });
 
-  it("should use styles", () => {
-    const style = (node.children as Node[]).find(c => c.type === "style");
-    expect(style).not.toBeNull();
+    it("should use styles", () => {
+        const style = findChildByType(node, "style");
+        expect(style).not.toBeNull();
 
-    const styleContent = style!.children as Node[];
-    const actual = styleContent![0];
+        const styleContent = style!.children as NodeShape[];
+        const actual = styleContent![0];
 
-    // Object.is comparison
-    expect(actual).toBe(demoStyle);
-  });
+        // Object.is comparison
+        expect(actual).toBe(demoStyle);
+    });
 
-  it("should use Topics", () => {
-    const actual = findTopicsNode();
-    // anything matches anything except null or undefined
-    expect(actual).toEqual(expect.anything());
-  });
+    it("should use Topics", () => {
+        const actual = findTopicsNode();
+        // anything matches anything except null or undefined
+        expect(actual).toEqual(expect.anything());
+    });
 
-  it("should use Example", () => {
-    const actual = findExampleNode();
+    it("should use Example", () => {
+        const actual = findExampleNode();
 
-    // shallow == test
-    // use toStrictEqual is deep equality
-    expect(actual).toEqual(expect.anything());
-  });
+        // shallow == test
+        // use toStrictEqual is deep equality
+        expect(actual).toEqual(expect.anything());
+    });
 
-  it("should notify Example when Topics changes the topic", () => {
-    const topicsNode = findTopicsNode();
-    const props = topicsNode?.props;
+    it("should notify Example when Topics changes the topic", () => {
+        const topicsNode = findTopicsNode();
+        const props = topicsNode?.props;
 
-    const topicChangeHandler = props?.topicChangeHandler as (t: {}) => {};
+        const topicChangeHandler = props?.topicChangeHandler as (t: {}) => {};
 
-    const expected = { id: 123, name: "Ishmael" };
+        const expected = { id: 123, name: "Ishmael" };
 
-    topicChangeHandler(expected);
+        topicChangeHandler(expected);
 
-    const actual = selectedTopic;
+        const actual = selectedTopic;
 
-    expect(actual).toEqual(expected);
-  });
+        expect(actual).toEqual(expected);
+    });
 });

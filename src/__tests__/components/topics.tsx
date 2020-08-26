@@ -1,61 +1,52 @@
-import { VNode, RendererNode, RendererElement } from "vue";
 import { Topics, TopicsShape } from "../../components/topics";
 import { TopicShape } from "../../components/topic";
 
-type Node = JSX.Element & VNode<RendererNode, RendererElement>;
+import { NodeShape, findChildByType } from "../test-helpers";
 
 describe(Topics, () => {
-  let node: Node;
-  let topics: TopicsShape["topics"] = [];
-  const mockTopicChangeHandler = jest.fn((topic: TopicShape) => {});
+    let node: NodeShape;
+    let topics: TopicsShape["topics"] = [];
+    const mockTopicChangeHandler = jest.fn((topic: TopicShape) => {});
 
-  beforeEach(() => {
-    [1, 2, 3].forEach(id => {
-      topics?.push({ id, name: `Topic ${id}` });
+    beforeEach(() => {
+        [1, 2, 3].forEach((id) => {
+            topics?.push({ id, name: `Topic ${id}` });
+        });
+
+        node = Topics({
+            topics,
+            topicChangeHandler: mockTopicChangeHandler,
+        }) as NodeShape;
     });
 
-    node = Topics({
-      topics,
-      topicChangeHandler: mockTopicChangeHandler
-    }) as Node;
-  });
+    it("should have h2", () => {
+        const actual = findChildByType(node, "h2");
+        expect(actual).not.toBeNull();
+        const textNode = findChildByType(actual!, "text");
+        const text = textNode?.children;
+        expect(text).toBe("Topics");
+    });
 
-  it("should have h2", () => {
-    const actual = (node.children as Node[]).find(child => child.type === "h2");
-    expect(actual).not.toBeNull();
+    it("should render each topic", () => {
+        const ul = findChildByType(node, "ul");
 
-    const textNode = (actual?.children as Node[])[0] as Node;
-    const text = textNode.children;
-    expect(text).toBe("Topics");
-  });
+        const children: any[] =
+            ul && Array.isArray(ul?.children) ? ul.children.flat() : [];
 
-  it("should render each topic", () => {
-    const ul = (node.children as Node[]).find(
-      child => child.type === "ul"
-    ) as Node;
+        expect(children).toHaveLength(topics!.length);
 
-    const children = ((ul.children as any) as Array<Node>).flat();
-    expect(children).toHaveLength(topics!.length);
+        // collection assertions are a bit weird
+        // see https://jestjs.io/docs/en/expect#expectarraycontainingarray
+        expect(
+            children.map((c) => {
+                const { clickHandler, ...topic }: { [name: string]: any } = {
+                    ...c.props,
+                };
 
-    // collection assertions are a bit weird
-    // see https://jestjs.io/docs/en/expect#expectarraycontainingarray
-    expect(
-      children.map(c => {
-        const { clickHandler, ...topic }: { [name: string]: any } = {
-          ...c.props
-        };
+                expect(clickHandler).toBe(mockTopicChangeHandler);
 
-        expect(clickHandler).toBe(mockTopicChangeHandler);
-
-        return topic;
-      })
-    ).toEqual(expect.arrayContaining(topics as []));
-  });
+                return topic;
+            })
+        ).toEqual(expect.arrayContaining(topics as []));
+    });
 });
-
-// sometimes, I really dislike TypeScript [most of the time]
-// setting the lib to include ES2020 really should have picked this up :/
-interface Array<T> {
-  flat(): T[];
-  flatMap(func: (x: T) => T): T[];
-}
