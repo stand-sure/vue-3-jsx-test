@@ -19,4 +19,5 @@ module.exports = {
         "\\.(css|less|scss)$": "<rootDir>/__mocks__/styleMock.js",
     },
     modulePathIgnorePatterns: ["<rootDir>/.*/test-helpers/"],
+    testRegex: "(/__tests__/.*|(\\.|/)(test|spec|steps))\\.(j|t)sx?$",
 };

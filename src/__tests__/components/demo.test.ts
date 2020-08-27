@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import { Demo, selectedTopic } from "../../components/demo";
 
 import {

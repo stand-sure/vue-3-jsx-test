@@ -40,6 +40,7 @@
     "eslint-plugin-vue": "^7.0.0-0",
     "fb-watchman": "^2.0.1",
     "jest": "^26.4.1",
+    "jest-cucumber": "^3.0.0",
     "node-sass": "^4.14.1",
     "sass-loader": "^10.0.1",
     "ts-jest": "^26.2.0",

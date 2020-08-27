@@ -1,4 +1,4 @@
-import { useState } from "../../helpers/useState";
+import { useState } from "../../../helpers/useState";
 
 describe(useState, () => {
     describe("getter", () => {
@@ -20,13 +20,14 @@ describe(useState, () => {
     });
 
     it.each`
-        initialValue | throws
-        ${0}         | ${"\b"}
-        ${"abc"}     | ${"\b"}
-        ${false}     | ${"\x08"}
-        ${{}}        | ${"NOT"}
-        ${{ a: 1 }}  | ${"NOT"}
-        ${null}      | ${"\b"}
+        initialValue   | throws
+        ${0}           | ${"\b"}
+        ${"abc"}       | ${"\b"}
+        ${false}       | ${"\x08"}
+        ${{}}          | ${"NOT"}
+        ${{ a: 1 }}    | ${"NOT"}
+        ${null}        | ${"\b"}
+        ${[1, 2, "a"]} | ${"NOT"}
     `(
         "should $throws throw when initial value is $initialValue",
         ({ initialValue, throws }) => {
@@ -71,6 +72,18 @@ describe(useState, () => {
             expect(value).toEqual(newValue);
         });
 
+        it("should handle property addition without set", () => {
+            const initialValue: { [name: string]: any } = {
+                a: 1,
+                b: "b",
+                c: false,
+            };
+            const [value] = useState(initialValue);
+            initialValue.d = "d";
+
+            expect(value).toEqual(initialValue);
+        });
+
         it("should handle property removal", () => {
             const initialValue: { [name: string]: any } = {
                 a: 1,
@@ -95,6 +108,34 @@ describe(useState, () => {
             expect(value).toEqual(newValue);
         });
 
+        it("should handle array addition", () => {
+            const initialValue = [1, "b", false];
+            const [value, setValue] = useState(initialValue);
+            const newValue = [...initialValue, ...["new element"]];
+
+            setValue(newValue);
+
+            expect(Array.isArray(value)).toBeTruthy();
+            expect(value).toEqual(expect.arrayContaining(newValue));
+        });
+
+        it("should handle array push", () => {
+            const initialValue = [1, "b", false];
+            const [value, setValue] = useState(initialValue);
+            initialValue.push("pushed");
+
+            setValue(initialValue);
+
+            expect(value).toEqual(expect.arrayContaining(initialValue));
+        });
+
+        it("should handle array push without set", () => {
+            const initialValue = [1, "b", false];
+            const [value] = useState(initialValue);
+            initialValue.push("pushed");
+            expect(value).toEqual(expect.arrayContaining(initialValue));
+        });
+
         it.each`
             val
             ${null}
@@ -115,3 +156,4 @@ describe(useState, () => {
         });
     });
 });
+
