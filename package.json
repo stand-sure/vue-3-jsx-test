@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
+    "build:dev": "vue-cli-service build --mode=development --report",
     "lint": "vue-cli-service lint",
-    "build:dev": "vue-cli-service build --mode=development",
-    "test": "jest",
+    "test": "node ./node_modules/jest/bin/jest",
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest --watch --runInBand ",
     "watch": "vue-cli-service build --mode=development --watch"
   },
