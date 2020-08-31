@@ -84,7 +84,7 @@ const findChildByType = (
         return findChild(
             parentNode,
             (n) =>
-                typeof n.type === "symbol" &&
+                typeof n?.type === "symbol" &&
                 n.type.toString() === "Symbol(Text)" &&
                 typeof n.children === "string"
         );

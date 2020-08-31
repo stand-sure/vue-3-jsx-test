@@ -11,10 +11,7 @@ const fakeTopics: TopicsShape["topics"] = [
   { id: 2, name: "Topic 2" }
 ];
 
-const [selectedTopic, setSelectedTopic] = useState({
-  id: -1,
-  name: "Please choose..."
-});
+const [selectedTopic, setSelectedTopic] = useState(Object(null));
 
 /**
  * @displayName Demo
