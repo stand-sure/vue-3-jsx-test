@@ -24,7 +24,8 @@
         "src/**/*.vue",
         "tests/**/*.ts",
         "tests/**/*.tsx",
-        "src/helpers/readFile/index.js"
+        "src/helpers/readFile/index.js",
+        "src/__tests__/**/*.js"
     ],
     "exclude": ["node_modules"]
 }
