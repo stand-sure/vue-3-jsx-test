@@ -85,8 +85,17 @@ describe(useState, () => {
         });
 
         describe("string", () => {
-            it.todo("replacement");
-            it.todo("multiple");
+            it("should handle string replacement", () => {
+                const initialSurname = "Smith";
+                const [surname, setSurname] = useState(initialSurname);
+                const getMarriedTo = (newSurname: string) =>
+                    setSurname(newSurname);
+
+                const newSurname = "Jones";
+                getMarriedTo(newSurname);
+
+                expect(surname.value).toBe(newSurname);
+            });
         });
 
         describe("boolean", () => {
