@@ -42,44 +42,33 @@ const state: Ref<WeakMap<object, any>> = ref(new WeakMap());
 const useState = function useState<T = any>(
     initialValue: T
 ): [ComputedRef<T>, (newValue: T) => void] {
-    if (
-        initialValue === null ||
-        initialValue === undefined ||
-        typeof initialValue !== "object"
-    ) {
-        throw new Error(
-            `Vue reactivity requires an object. You can try something like the following: ${JSON.stringify(
-                { value: initialValue },
-                null,
-                2
-            )}.`
-        );
-    }
-
-    const key = Object.assign(Object.create(null), { ...initialValue });
+    const key = Object.create(null);
 
     state.value.set(
         key,
-        Array.isArray(initialValue) ? [...initialValue] : { ...initialValue }
+        initialValue !== Object(initialValue)
+            ? initialValue
+            : Array.isArray(initialValue)
+            ? [...initialValue]
+            : { ...initialValue }
     );
 
     const getter = computed<T>(() =>
-        Array.isArray(state.value.get(key))
+        initialValue !== Object(initialValue)
+            ? state.value.get(key)
+            : Array.isArray(state.value.get(key))
             ? [...state.value.get(key)]
             : { ...state.value.get(key) }
     );
+    
     const setter = (newValue: T) => {
-        if (newValue === null || newValue === undefined) {
-            throw new Error(
-                `Vue reactivity requires an object. You can try something like the following: ${JSON.stringify(
-                    { value: newValue },
-                    null,
-                    2
-                )}.`
-            );
+        const destination = state.value.get(key);
+
+        if (destination !== Object(destination)) {
+            state.value.set(key, newValue);
+            return;
         }
 
-        const destination = state.value.get(key);
         const source = Object(newValue);
         const keys = [...Object.keys(source), ...Object.keys(destination)];
         keys.forEach((name) => {
