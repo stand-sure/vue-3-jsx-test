@@ -20,4 +20,5 @@ module.exports = {
     },
     modulePathIgnorePatterns: ["<rootDir>/.*/test-helpers/"],
     testRegex: "(/__tests__/.*|(\\.|/)(test|spec|steps))\\.(j|t)sx?$",
+    setupFiles: ["<rootDir>/jest.init.js"],
 };
