@@ -99,8 +99,14 @@ describe(useState, () => {
         });
 
         describe("boolean", () => {
-            it.todo("replacement");
-            it.todo("multiple");
+            it("should handle replacement", () => {
+                const initialIdleValue = false;
+                const [idle, setIdle] = useState(initialIdleValue);
+
+                setIdle(!initialIdleValue);
+
+                expect(idle.value).toBe(!initialIdleValue);
+            });
         });
 
         describe("object", () => {
