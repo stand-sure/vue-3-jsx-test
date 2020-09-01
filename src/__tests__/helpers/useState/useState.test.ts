@@ -1,4 +1,5 @@
 import { useState } from "../../../helpers/useState";
+import { computed } from "vue";
 
 describe(useState, () => {
     describe("getter", () => {
@@ -73,9 +74,9 @@ describe(useState, () => {
                 const initialGirlCount = 2;
                 const [girlCount, setGirlCount] = useState(initialGirlCount);
 
-                const newGirlCount = girlCount.value -10 ;
+                const newGirlCount = girlCount.value - 10;
                 const newBoyCount = boyCount.value + 2;
-                setBoyCount(newBoyCount);                
+                setBoyCount(newBoyCount);
                 setGirlCount(newGirlCount);
 
                 expect(girlCount.value).toEqual(newGirlCount);
@@ -162,6 +163,57 @@ describe(useState, () => {
 
                 expect(foo.value).toEqual(nextFoo);
                 expect(bar.value).toEqual(initialBar);
+            });
+
+            it("should 'notify' objects with dependent property", () => {
+                const [dogSeesSquirrel, setDogSeesSquirrel] = useState(false);
+                const dog = {};
+                Object.defineProperty(dog, "chasingASquirrel", {
+                    get() {
+                        return dogSeesSquirrel.value;
+                    },
+                });
+
+                // pre-flight check
+                expect(
+                    (dog as { chasingASquirrel: boolean }).chasingASquirrel
+                ).toBeFalsy();
+
+                setDogSeesSquirrel(true);
+
+                expect(
+                    (dog as { chasingASquirrel: boolean }).chasingASquirrel
+                ).toBeTruthy();
+            });
+
+            it("should 'notify' objects with dependent property 2", () => {
+                const [dogSeesSquirrel, setDogSeesSquirrel] = useState(false);
+                const dog = {
+                    get chasingASquirrel() {
+                        return dogSeesSquirrel.value;
+                    },
+                };
+
+                // pre-flight check
+                expect(dog.chasingASquirrel).toBeFalsy();
+
+                setDogSeesSquirrel(true);
+
+                expect(dog.chasingASquirrel).toBeTruthy();
+            });
+
+            it("should 'notify' objects with computed property", () => {
+                const [dogSeesSquirrel, setDogSeesSquirrel] = useState(false);
+                const dog = {
+                    chasingASquirrel: computed(() => dogSeesSquirrel.value),
+                };
+
+                // pre-flight check
+                expect(dog.chasingASquirrel.value).toBeFalsy();
+
+                setDogSeesSquirrel(true);
+
+                expect(dog.chasingASquirrel.value).toBeTruthy();
             });
         });
 
