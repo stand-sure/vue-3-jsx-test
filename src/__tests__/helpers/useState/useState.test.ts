@@ -96,6 +96,26 @@ describe(useState, () => {
 
                 expect(surname.value).toBe(newSurname);
             });
+
+            it("should handle assignment from null", () => {
+                const [name, setName] = useState<string | null>(null);
+                const newName = "Patty O. Fern-Sure";
+
+                setName(newName);
+
+                expect(name.value).toBe(newName);
+            });
+
+            it("should handle assignment to null", () => {
+                const [name, setName] = useState<string | null>(
+                    "Patty O. Fern-Sure"
+                );
+                const newName = null;
+
+                setName(newName);
+
+                expect(name.value).toBe(newName);
+            });
         });
 
         describe("boolean", () => {
@@ -230,6 +250,29 @@ describe(useState, () => {
 
                 expect(dog.chasingASquirrel.value).toBeTruthy();
             });
+
+            it("should handle assignment from null", () => {
+                const newPerson = {
+                    name: "Patty O. Fern-Sure",
+                };
+                const [person, setPerson] = useState<typeof newPerson | null>(
+                    null
+                );
+
+                setPerson(newPerson);
+
+                expect(person.value).toEqual(newPerson);
+            });
+
+            it("should handle assignment to null", () => {
+                const initialName = "Patty O. Fern-Sure";
+                const [name, setName] = useState<string | null>(initialName);
+                expect(name.value).toEqual(initialName);
+
+                setName(null);
+
+                expect(name.value).toBeNull();
+            });
         });
 
         describe("array", () => {
@@ -260,6 +303,38 @@ describe(useState, () => {
                 expect(fooBar.value).not.toEqual(
                     expect.arrayContaining(initialValue)
                 );
+            });
+
+            it("should handle assignment from null", () => {
+                const people = [
+                    {
+                        name: "Patty O. Fern-Sure",
+                    },
+                ];
+                const [employees, setEmployees] = useState<
+                    typeof people | null
+                >(null);
+
+                setEmployees(people);
+
+                expect(employees.value).toEqual(people);
+            });
+
+            it("should handle assignment to null", () => {
+                const people = [
+                    {
+                        name: "Patty O. Fern-Sure",
+                    },
+                ];
+
+                const [employees, setEmployees] = useState<
+                    typeof people | null
+                >(people);
+                // eslint-disable-next-line no-debugger
+                debugger;
+                setEmployees(null);
+
+                expect(employees.value).toBeNull();
             });
         });
 

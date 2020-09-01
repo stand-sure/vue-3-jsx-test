@@ -28,6 +28,8 @@ const getSingleton = (): Ref<WeakMap<object, any>> => {
 // const stateSingleton = getSingleton();
 const state: Ref<WeakMap<object, any>> = ref(new WeakMap());
 
+const isPrimitive = (val: any) => val !== Object(val);
+
 /**
  * Sets an initial value and then returns a reactive getter and a setter.
  *
@@ -46,7 +48,7 @@ const useState = function useState<T = any>(
 
     state.value.set(
         key,
-        initialValue !== Object(initialValue)
+        isPrimitive(initialValue)
             ? initialValue
             : Array.isArray(initialValue)
             ? [...initialValue]
@@ -54,30 +56,44 @@ const useState = function useState<T = any>(
     );
 
     const getter = computed<T>(() =>
-        initialValue !== Object(initialValue)
+        isPrimitive(state.value.get(key))
             ? state.value.get(key)
             : Array.isArray(state.value.get(key))
             ? [...state.value.get(key)]
             : { ...state.value.get(key) }
     );
-    
+
     const setter = (newValue: T) => {
         const destination = state.value.get(key);
 
-        if (destination !== Object(destination)) {
+        if (isPrimitive(destination)) {
             state.value.set(key, newValue);
             return;
         }
 
-        const source = Object(newValue);
+        if (newValue === null || newValue === undefined) {
+            state.value.set(key, newValue);
+            return;
+        }
+
+        const source = (Array.isArray(newValue)
+            ? [...newValue]
+            : { ...newValue }) as { [name: string]: any };
+
         const keys = [...Object.keys(source), ...Object.keys(destination)];
-        keys.forEach((name) => {
-            if (source[name] === undefined) {
-                delete destination[name];
+
+        keys.forEach((key) => {
+            if (source[key] === undefined) {
+                if (Array.isArray(destination)) {
+                    destination.splice(Number(key), 1);
+                } else {
+                    delete destination[key];
+                }
+
                 return;
             }
 
-            destination[name] = source[name];
+            destination[key] = source[key];
         });
     };
 
