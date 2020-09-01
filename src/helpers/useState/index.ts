@@ -1,4 +1,4 @@
-import { ref, reactive, Ref } from "vue";
+import { ref, reactive, Ref, computed, ComputedRef } from "vue";
 
 let instance: Ref<WeakMap<object, any>>;
 
@@ -39,7 +39,9 @@ const state: Ref<WeakMap<object, any>> = ref(new WeakMap());
  *
  * @return {[]}
  */
-const useState = function useState<T = any>(initialValue: T) {
+const useState = function useState<T = any>(
+    initialValue: T
+): [ComputedRef<T>, (newValue: T) => void] {
     if (
         initialValue === null ||
         initialValue === undefined ||
@@ -56,9 +58,16 @@ const useState = function useState<T = any>(initialValue: T) {
 
     const key = Object.assign(Object.create(null), { ...initialValue });
 
-    state.value.set(key, reactive(Object(initialValue)));
+    state.value.set(
+        key,
+        Array.isArray(initialValue) ? [...initialValue] : { ...initialValue }
+    );
 
-    const getter = state.value.get(key);
+    const getter = computed<T>(() =>
+        Array.isArray(state.value.get(key))
+            ? [...state.value.get(key)]
+            : { ...state.value.get(key) }
+    );
     const setter = (newValue: T) => {
         if (newValue === null || newValue === undefined) {
             throw new Error(
@@ -70,7 +79,7 @@ const useState = function useState<T = any>(initialValue: T) {
             );
         }
 
-        const destination = getter;
+        const destination = state.value.get(key);
         const source = Object(newValue);
         const keys = [...Object.keys(source), ...Object.keys(destination)];
         keys.forEach((name) => {

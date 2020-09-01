@@ -75,6 +75,6 @@ describe("Demo", () => {
 
         const actual = selectedTopic;
 
-        expect(actual).toEqual(expected);
+        expect(actual.value).toEqual(expected);
     });
 });

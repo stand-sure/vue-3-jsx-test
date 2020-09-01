@@ -10,12 +10,9 @@ describe(useState, () => {
             ${{ a: 1, b: "2", c: false }}
             ${{ a: 1, b: "2", c: false, d: null }}
             ${Object(null) /* yields {} */}
-            ${Object(1) /* yields {} */}
-            ${Object(true) /* yields {} */}
-            ${Object("do NOT do this") /* the indices become keys with each letter as a value */}
         `("should return initial value: $initialValue", ({ initialValue }) => {
             const [getter, setter] = useState(initialValue);
-            expect(getter).toEqual(initialValue);
+            expect(getter.value).toEqual(initialValue);
         });
     });
 
@@ -54,34 +51,34 @@ describe(useState, () => {
     describe("setter", () => {
         it("should handle property update", () => {
             const initialValue = { a: 1, b: "b", c: false };
-            const [value, setValue] = useState(initialValue);
+            const [foo, setFoo] = useState(initialValue);
             const newValue = { ...initialValue, ...{ c: true } };
 
-            setValue(newValue);
+            setFoo(newValue);
 
-            expect(value).toEqual(newValue);
+            expect(foo.value).toEqual(newValue);
         });
 
         it("should handle property addition", () => {
             const initialValue = { a: 1, b: "b", c: false };
-            const [value, setValue] = useState(initialValue);
+            const [bar, setBar] = useState(initialValue);
             const newValue = { ...initialValue, ...{ d: "d" } };
 
-            setValue(newValue);
+            setBar(newValue);
 
-            expect(value).toEqual(newValue);
+            expect(bar.value).toEqual(newValue);
         });
 
-        it("should handle property addition without set", () => {
+        it("should NOT handle property addition without set", () => {
             const initialValue: { [name: string]: any } = {
                 a: 1,
                 b: "b",
                 c: false,
             };
-            const [value] = useState(initialValue);
+            const [foo] = useState(initialValue);
             initialValue.d = "d";
 
-            expect(value).toEqual(initialValue);
+            expect(foo.value).not.toEqual(initialValue);
         });
 
         it("should handle property removal", () => {
@@ -90,50 +87,51 @@ describe(useState, () => {
                 b: "b",
                 c: false,
             };
-            const [value, setValue] = useState(initialValue);
+            const [bar, setBar] = useState(initialValue);
             delete initialValue.c;
 
-            setValue(initialValue);
+            setBar(initialValue);
 
-            expect(value).toEqual(initialValue);
+            expect(bar.value).toEqual(initialValue);
         });
 
         it("should handle object replacement", () => {
             const initialValue = { a: 1, b: "b", c: false };
-            const [value, setValue] = useState(initialValue);
+            const [foo, setFoo] = useState(initialValue);
             const { c, ...newValue }: any = { ...initialValue };
 
-            setValue(newValue);
+            setFoo(newValue);
 
-            expect(value).toEqual(newValue);
+            expect(foo.value).toEqual(newValue);
         });
 
         it("should handle array addition", () => {
             const initialValue = [1, "b", false];
-            const [value, setValue] = useState(initialValue);
+            const [bar, setBar] = useState(initialValue);
             const newValue = [...initialValue, ...["new element"]];
 
-            setValue(newValue);
+            setBar(newValue);
 
-            expect(Array.isArray(value)).toBeTruthy();
-            expect(value).toEqual(expect.arrayContaining(newValue));
+            expect(Array.isArray(bar.value)).toBeTruthy();
+            expect(bar.value).toEqual(expect.arrayContaining(newValue));
         });
 
         it("should handle array push", () => {
             const initialValue = [1, "b", false];
-            const [value, setValue] = useState(initialValue);
+            const [foo, setFoo] = useState(initialValue);
             initialValue.push("pushed");
+            setFoo(initialValue);
 
-            setValue(initialValue);
-
-            expect(value).toEqual(expect.arrayContaining(initialValue));
+            expect(foo.value).toEqual(expect.arrayContaining(initialValue));
         });
 
-        it("should handle array push without set", () => {
+        it("should NOT handle array push without set", () => {
             const initialValue = [1, "b", false];
-            const [value] = useState(initialValue);
+            const [fooBar] = useState(initialValue);
             initialValue.push("pushed");
-            expect(value).toEqual(expect.arrayContaining(initialValue));
+            expect(fooBar.value).not.toEqual(
+                expect.arrayContaining(initialValue)
+            );
         });
 
         it.each`
@@ -152,8 +150,7 @@ describe(useState, () => {
                 )}.`
             );
 
-            expect(() => setValue(null)).toThrow(expectedError);
+            expect(() => setValue(null as any)).toThrow(expectedError);
         });
     });
 });
-
