@@ -1,4 +1,8 @@
 module.exports = {
+    purge: {
+        content: ["**/*.html", "components/**/*.vue", "components/**/*.tsx"],
+        defaultExtractor: (content) => content.match(/[\w-:/]+(?<!:)/g) || [],
+    },
     future: {
         removeDeprecatedGapUtilities: true,
     },
